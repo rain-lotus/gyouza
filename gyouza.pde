@@ -6,6 +6,8 @@ void setup() {
   font = createFont("メイリオ", 100);
   textFont(font);
   img = loadImage("gyouza.png");
+  img.loadPixels();
+  loadPixels();
   frameRate(30);
 }
 
@@ -13,10 +15,15 @@ int n = 0;
 float posx = 0, posy = 0, textsize = 1;
 
 void draw() {
-  background(n%100, 90, 90);
-  blendMode(MULTIPLY);//合成モードを変えるよ
   int d = 0;
-  image(img, 0, 0);
+  for (int i = 0; i < img.pixels.length; i++) {
+    color c = img.pixels[i];
+    d += (int)random(50000) == 0? (int)random(width):0; 
+    c = color((hue(c)+n)%100, saturation(c), brightness(c));
+    if (c == color(100)) c = color(n%100, 90, 90);
+    pixels[(i+d)%(img.pixels.length-1)] = c;
+  }
+  updatePixels();
   n++;
 
   blendMode(DIFFERENCE);//合成モードを変えるよ
